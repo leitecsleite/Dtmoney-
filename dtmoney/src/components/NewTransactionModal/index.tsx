@@ -4,6 +4,8 @@ import incomeImg from '../../assets/img/Entradas.svg';
 import outcomeImg from '../../assets/img/Saídas.svg';
 import { Container, TransactionTypeContainer, RadioBox } from './styles';
 import { useState } from 'react';
+import { FormEvent } from 'react';
+import { api } from '../../services/api';
 
 
 
@@ -14,6 +16,25 @@ interface NewTransactionModal {
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModal) {
     const [type, setType] = useState('deposit'); 
+
+    const [title, setTitle] = useState(''); 
+    const [value, setValue] = useState(0); 
+    const [category, setCategory] = useState(''); 
+    
+
+
+    function handleCreateNewTransaction(event: FormEvent){
+        event.preventDefault(); 
+
+        const data =({
+            title,
+            value,
+            category, 
+            type
+        })
+
+        api.post('/transactions', data); 
+    }
 
     return (
         <Modal
@@ -29,15 +50,19 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
             >
                 <img src={closeImg} alt="Fechar modal" />
             </button>
-            <Container>
+            <Container onSubmit={handleCreateNewTransaction}>
                 <h2>Cadastrar transações</h2>
 
                 <input
                     type="text"
+                    value ={title}
+                    onChange = {event => setTitle(event.target.value)}
                     placeholder='Titulo'
                 />
 
                 <input type="number"
+                    value ={value}
+                    onChange = {event => setValue(Number(event.target.value))}
                     placeholder="valor"
                     id="" />
 
@@ -66,6 +91,8 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
 
                 <input type="text"
                     placeholder='categororia'
+                    value ={category}
+                    onChange = {event => setCategory(event.target.value)}
                 />
 
                 <button type="submit">
