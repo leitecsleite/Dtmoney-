@@ -3,9 +3,10 @@ import closeImg from '../../assets/img/Vector.svg';
 import incomeImg from '../../assets/img/Entradas.svg';
 import outcomeImg from '../../assets/img/Saídas.svg';
 import { Container, TransactionTypeContainer, RadioBox } from './styles';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { FormEvent } from 'react';
 import { api } from '../../services/api';
+import { TransactionsContext } from '../../TransactionsContext';
 
 
 
@@ -15,27 +16,26 @@ interface NewTransactionModal {
 }
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModal) {
-    const [type, setType] = useState('deposit'); 
+    const { createTransactions } = useContext(TransactionsContext);
 
-    const [title, setTitle] = useState(''); 
-    const [value, setValue] = useState(0); 
-    const [category, setCategory] = useState(''); 
-    
+    const [type, setType] = useState('deposit');
+    const [title, setTitle] = useState('');
+    const [value, setValue] = useState(0);
+    const [category, setCategory] = useState('');
 
 
-    function handleCreateNewTransaction(event: FormEvent){
-        event.preventDefault(); 
 
-        const data =({
+    function handleCreateNewTransaction(event: FormEvent) {
+        event.preventDefault();
+
+        createTransactions({
             title,
-            value,
-            category, 
-            type
+            amount: value,
+            category,
+            type,
         })
 
-        api.post('/transactions', data); 
     }
-
     return (
         <Modal
             isOpen={isOpen}
@@ -55,14 +55,14 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
 
                 <input
                     type="text"
-                    value ={title}
-                    onChange = {event => setTitle(event.target.value)}
+                    value={title}
+                    onChange={event => setTitle(event.target.value)}
                     placeholder='Titulo'
                 />
 
                 <input type="number"
-                    value ={value}
-                    onChange = {event => setValue(Number(event.target.value))}
+                    value={value}
+                    onChange={event => setValue(Number(event.target.value))}
                     placeholder="valor"
                     id="" />
 
@@ -70,9 +70,9 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
                     <RadioBox
                         type="button"
                         //className ={type == 'deposit' ? 'active': ''}
-                        isActive = {type == 'deposity'}
-                        onClick={() => {setType('deposity')}}
-                        activeColor = "green"
+                        isActive={type == 'deposity'}
+                        onClick={() => { setType('deposity') }}
+                        activeColor="green"
                     >
                         <img src={incomeImg} alt="Entradas" />
                         <span>Entrada</span>
@@ -80,9 +80,9 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
 
                     <RadioBox
                         type="button"
-                        onClick={() => {setType('withdraw')}}
-                        isActive = {type == 'withdraw'}
-                        activeColor= "red"
+                        onClick={() => { setType('withdraw') }}
+                        isActive={type == 'withdraw'}
+                        activeColor="red"
                     >
                         <img src={outcomeImg} alt="Saídas" />
                         <span>Saída</span>
@@ -91,8 +91,8 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
 
                 <input type="text"
                     placeholder='categororia'
-                    value ={category}
-                    onChange = {event => setCategory(event.target.value)}
+                    value={category}
+                    onChange={event => setCategory(event.target.value)}
                 />
 
                 <button type="submit">
