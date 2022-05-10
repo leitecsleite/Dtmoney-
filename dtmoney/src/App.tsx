@@ -4,7 +4,7 @@ import { Header } from './components/Header'
 import { GlobalStyle } from './styles/global'
 import { NewTransactionModal } from './components/NewTransactionModal'
 import Modal from 'react-modal';
-import { TransactionsContext, TransactionsProvider } from './TransactionsContext'
+import { TransactionsProvider } from '../src/hooks/useTransactions'
 
 
 export function App() {
