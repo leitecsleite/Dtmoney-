@@ -1,4 +1,4 @@
-# ignite-modulo-2
+# dtmoney
  
 ![](./dtmoney/dtmoney.gif)</br>
 
